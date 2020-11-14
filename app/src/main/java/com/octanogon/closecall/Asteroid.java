@@ -25,6 +25,8 @@ public class Asteroid {
 
     private float rotationAngle = 0;
 
+    private boolean reversed = false;
+
     private long previousTime = 0;
 
     private ValueAnimator rotationAnimator;
@@ -48,6 +50,12 @@ public class Asteroid {
         rotationAnimator.setDuration(duration);
         rotationAnimator.setInterpolator(new LinearInterpolator());
 
+        // Randomly decide the direction of the asteroid
+
+        if (Math.random() <= 0.5)
+        {
+            reversed = true;
+        }
         rotationAnimator.start();
 
 
@@ -62,7 +70,10 @@ public class Asteroid {
         // r^2 \dot{\theta} = h
 
         double theta_dot = conservedh / (distanceFromEarth * distanceFromEarth);
+
         angleFromEarth += theta_dot * elapsedTime;
+
+
 
         // Now \ddot{r} = h^2/r^3 + MG/r^2
 
@@ -82,7 +93,17 @@ public class Asteroid {
     }
 
     public float getAngleFromEarth() {
-        return angleFromEarth;
+
+        if (reversed)
+        {
+            return - angleFromEarth;
+        }
+        else
+        {
+            return angleFromEarth;
+        }
+
+
     }
 
     public float getWidth() {return width;}
