@@ -5,6 +5,7 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
 import android.graphics.RadialGradient;
 import android.graphics.Shader;
@@ -17,6 +18,7 @@ public class Earth {
     private Bitmap earthBitmap;
     private Paint earthPaint;
     private Paint atmospherePaint;
+    private Paint shadowPaint;
 
     private int radius = 150;
 
@@ -49,6 +51,10 @@ public class Earth {
 
         atmospherePaint.setStyle(Paint.Style.FILL);
 
+        shadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        shadowPaint.setColor(Color.BLACK);
+
 
     }
 
@@ -62,8 +68,14 @@ public class Earth {
         canvas.rotate((float) rotationAnimator.getAnimatedValue(), x, y);
         canvas.drawCircle(x, y, (float) (radius*2), atmospherePaint);
         canvas.drawBitmap(earthBitmap, x-radius, y-radius, earthPaint);
-
         canvas.restore();
+
+        int[] colors = {Color.TRANSPARENT, Color.BLACK};
+        float[] positions = {0f, 0.2f};
+        LinearGradient shadowGrad = new LinearGradient(x, y-(radius/4), x, y+radius, colors, positions, Shader.TileMode.CLAMP);
+        shadowPaint.setShader(shadowGrad);
+        canvas.drawCircle(x,y, (float) (radius), shadowPaint);
+
 
     }
 

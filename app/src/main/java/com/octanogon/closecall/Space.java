@@ -6,7 +6,9 @@ import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
+import android.graphics.LinearGradient;
 import android.graphics.Paint;
+import android.graphics.Shader;
 import android.os.Build;
 import android.renderscript.Sampler;
 import android.util.AttributeSet;
@@ -23,6 +25,8 @@ public class Space extends View {
 
     private Earth earth;
     private Paint asteroidPaint;
+
+    private Paint shadowPaint;
 
     private int currentX = 0;
     private int currentY = 0;
@@ -68,6 +72,10 @@ public class Space extends View {
     }
 
     private void init() {
+
+        shadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
+
+        shadowPaint.setColor(Color.BLACK);
 
         earth = new Earth(BitmapFactory.decodeResource(getResources(), R.drawable.earth));
 
@@ -205,6 +213,14 @@ public class Space extends View {
             canvas.rotate(a.getRotationAngleInDegrees(), x, y);
             canvas.drawOval(x - a.getWidth()/2, y - a.getHeight()/2, x + a.getWidth()/2, y + a.getHeight()/2, asteroidPaint);
             canvas.restore();
+
+            // Draw a shadow
+            int[] colors = {Color.TRANSPARENT, Color.BLACK};
+            float[] positions = {0f, 0.8f};
+            LinearGradient shadowGrad = new LinearGradient(x, y-(a.getHeight()/4), x, y+a.getHeight(), colors, positions, Shader.TileMode.CLAMP);
+            shadowPaint.setShader(shadowGrad);
+            canvas.drawCircle(x,y, (float) (a.getHeight()), shadowPaint);
+
         }
 
         canvas.restore();
