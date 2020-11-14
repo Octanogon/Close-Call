@@ -56,6 +56,7 @@ public class Asteroid {
     public void updateTimeAndDistance(long time)
     {
         long elapsedTime = previousTime - time;
+
         previousTime = (long) time;
 
         // r^2 \dot{\theta} = h
