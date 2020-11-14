@@ -9,8 +9,8 @@ import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
+import android.view.ScaleGestureDetector;
 import android.view.View;
-import android.widget.ScrollView;
 import android.widget.Scroller;
 
 public class Space extends View {
@@ -27,7 +27,11 @@ public class Space extends View {
     private int minY = -1000;
     private int maxY = 1000;
 
-    private int SCALE = 8;
+    private int SCALE = 32;
+
+    private float zoom = 1;
+    private float zoomx = 0;
+    private float zoomy = 0;
 
     private int currentWidth;
     private int currentHeight;
@@ -35,10 +39,13 @@ public class Space extends View {
     private int centerx;
     private int centery;
 
-    private GestureDetector detector;
+    private GestureDetector gestureDetector;
+    private ScaleGestureDetector scaleGestureDetector;
+
 
     private Scroller scroller;
     private ValueAnimator scrollAnimator;
+
 
     private int earthRadius = 100;
 
@@ -64,7 +71,23 @@ public class Space extends View {
         asteroidPaint.setStyle(Paint.Style.FILL);
         asteroidPaint.setColor(Color.GRAY);
 
-        detector = new GestureDetector(this.getContext(),
+        scaleGestureDetector = new ScaleGestureDetector(this.getContext(),
+                new ScaleGestureDetector.SimpleOnScaleGestureListener() {
+                    @Override
+                    public boolean onScale(ScaleGestureDetector detector) {
+
+                        zoom *= detector.getScaleFactor();
+                        // Don't let it get too small or large
+                        zoom = Math.max(0.1f, Math.min(zoom, 5.0f));
+
+                        zoomx = detector.getFocusX();
+                        zoomy = detector.getFocusY();
+                        invalidate();
+                        return true;
+                    }
+                });
+
+        gestureDetector = new GestureDetector(this.getContext(),
                 new GestureDetector.SimpleOnGestureListener() {
                     @Override
                     public boolean onDown(MotionEvent e) {
@@ -85,15 +108,17 @@ public class Space extends View {
                     @Override
                     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                         Log.d("Scroll", "x: " + distanceX + " y: " + distanceY);
-                        updateCenter(- (int) distanceX, - (int) distanceY);
+                        updateCenter(-(int) distanceX, -(int) distanceY);
                         postInvalidate();
                         return true;
                     }
+
+
                 });
 
         Log.d("SPACE", "Done gesture");
         scroller = new Scroller(getContext(), null, true);
-        scrollAnimator = ValueAnimator.ofFloat(0,1);
+        scrollAnimator = ValueAnimator.ofFloat(0, 1);
         scrollAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator valueAnimator) {
@@ -106,12 +131,15 @@ public class Space extends View {
             }
         });
 
-        scrollAnimator.setDuration(5000);
+
     }
 
     @Override
     public boolean onTouchEvent(MotionEvent event) {
-        boolean result = detector.onTouchEvent(event);
+        boolean result = gestureDetector.onTouchEvent(event);
+
+        scaleGestureDetector.onTouchEvent(event);
+
         if (!result) {
             if (event.getAction() == MotionEvent.ACTION_UP) {
                 result = true;
@@ -121,8 +149,7 @@ public class Space extends View {
     }
 
 
-    private void updateCenter(int x, int y)
-    {
+    private void updateCenter(int x, int y) {
         Log.d("CENTER", "Center update");
         centerx += x;
         centery += y;
@@ -136,7 +163,10 @@ public class Space extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
-        canvas.drawCircle(centerx,centery,earthRadius, earthPaint);
+        canvas.save();
+        canvas.scale(zoom, zoom, zoomx, zoomy);
+
+        canvas.drawCircle(centerx, centery, earthRadius, earthPaint);
 
         // Draw the asteroids
 
@@ -149,6 +179,9 @@ public class Space extends View {
 
             canvas.drawCircle(x, y, a.getRadius(), asteroidPaint);
         }
+
+        canvas.restore();
+
     }
 
     @Override
@@ -158,11 +191,9 @@ public class Space extends View {
         currentHeight = h;
         currentWidth = w;
 
-        centerx = currentWidth/2;
-        centery = currentHeight/2;
-
+        centerx = currentWidth / 2;
+        centery = currentHeight / 2;
 
 
     }
-
 }
