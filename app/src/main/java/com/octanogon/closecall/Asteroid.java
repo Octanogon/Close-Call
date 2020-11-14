@@ -13,7 +13,7 @@ public class Asteroid {
     private static final double BIG_G = 6.7e-11;
 
     private float distanceFromEarth; // in m
-    private float angleFromEarth; // As a bearing
+    private float angleFromEarth; // As a bearing in radians
     private float width;
     private float height;
     private float mass;

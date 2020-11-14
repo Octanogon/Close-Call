@@ -1,38 +1,24 @@
 package com.octanogon.closecall;
 
-import okhttp3.Call;
-import okhttp3.Callback;
-import okhttp3.MediaType;
-import okhttp3.OkHttpClient;
-import okhttp3.Request;
-import okhttp3.RequestBody;
-import okhttp3.Response;
-
-import android.app.DownloadManager;
 import android.os.AsyncTask;
 import android.util.Log;
 
 import java.io.BufferedReader;
-import java.io.IOException;
 
 import java.io.InputStreamReader;
 import java.net.HttpURLConnection;
 import java.net.URL;
-import com.google.gson.Gson;
 import com.google.gson.JsonObject;
 import com.google.gson.JsonParser;
 import java.util.Calendar;
 
 import java.text.SimpleDateFormat;
 
-import org.json.JSONObject;
-
 
 public class GetAsteroidData extends AsyncTask<Void, Void, JsonObject>{
     private static String apiKey = "0yuiCFcYnM1VGYAUnCAWpEceMPgFceWQxh9TK4Rc";
     JsonParser jsonParser;
 
-    @Override
     protected JsonObject doInBackground(Void... urls) {
         // get current date
         Calendar cal = Calendar.getInstance();
