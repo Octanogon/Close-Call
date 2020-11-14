@@ -128,7 +128,7 @@ public class Space extends View {
                     @Override
                     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                         Log.d("Scroll", "x: " + distanceX + " y: " + distanceY);
-                        updateCenter(-(int) distanceX, -(int) distanceY);
+                        updateCenter(-(int) (distanceX / zoom), -(int) (distanceY / zoom));
                         postInvalidate();
                         return true;
                     }
