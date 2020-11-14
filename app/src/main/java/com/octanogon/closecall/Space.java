@@ -33,6 +33,9 @@ public class Space extends View {
 
     private int SCALE = 32;
 
+    private int time_scale = 1;
+    private long current_time = 0;
+
     private float zoom = 1;
     private float zoomx = 0;
     private float zoomy = 0;
@@ -50,8 +53,9 @@ public class Space extends View {
     private Scroller scroller;
     private ValueAnimator scrollAnimator;
 
-    private int FRAME_RATE = 60;
+    private int FRAME_RATE = 120;
     private ValueAnimator frameUpdater;
+
 
 
     private int earthRadius = 100;
@@ -75,6 +79,7 @@ public class Space extends View {
         frameUpdater.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
             @Override
             public void onAnimationUpdate(ValueAnimator animation) {
+                current_time += time_scale;
                 invalidate();
             }
         });
@@ -192,10 +197,12 @@ public class Space extends View {
 
         for (Asteroid a : asteroids.getAsteroids()) {
 
+            a.updateTimeAndDistance(current_time);
+
             // Determine the x and y coordinates of the asteroid
 
-            float x = (float) (centerx + (a.getDistanceFromEarth() * Math.sin(a.getAngleFromEarth())));
-            float y = (float) (centery - (a.getDistanceFromEarth() * Math.cos(a.getAngleFromEarth())));
+            float x = (float) (centerx + ((a.getDistanceFromEarth() * Math.sin(a.getAngleFromEarth())) / 500));
+            float y = (float) (centery - ((a.getDistanceFromEarth() * Math.cos(a.getAngleFromEarth())) / 500));
 
             canvas.save();
             canvas.rotate(a.getRotationAngleInDegrees(), x, y);
