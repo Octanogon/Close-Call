@@ -1,5 +1,6 @@
 package com.octanogon.closecall;
 
+import android.content.Context;
 import android.util.Log;
 
 import com.google.gson.JsonArray;
@@ -17,6 +18,11 @@ public class AsteroidList {
     public AsteroidList() {
 
         findAsteroids();
+    }
+
+    public int getLength()
+    {
+        return asteroids.length;
     }
 
     private void findAsteroids() {

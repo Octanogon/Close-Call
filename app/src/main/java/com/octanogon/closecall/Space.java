@@ -18,6 +18,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Scroller;
+import android.widget.Toast;
 
 import androidx.annotation.RequiresApi;
 
@@ -67,6 +68,9 @@ public class Space extends View {
         super(context, attrs);
 
         asteroids = new AsteroidList();
+
+        CharSequence text = "Successfully found " + asteroids.getLength() + " NEOs!";
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
         init();
 
     }
