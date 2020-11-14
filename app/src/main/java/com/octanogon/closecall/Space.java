@@ -2,6 +2,8 @@ package com.octanogon.closecall;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -19,8 +21,7 @@ import androidx.annotation.RequiresApi;
 
 public class Space extends View {
 
-    private Paint earthPaint;
-
+    private Earth earth;
     private Paint asteroidPaint;
 
     private int currentX = 0;
@@ -56,10 +57,6 @@ public class Space extends View {
     private int FRAME_RATE = 120;
     private ValueAnimator frameUpdater;
 
-
-
-    private int earthRadius = 100;
-
     private AsteroidList asteroids;
 
     public Space(Context context, AttributeSet attrs) {
@@ -71,6 +68,8 @@ public class Space extends View {
     }
 
     private void init() {
+
+        earth = new Earth(BitmapFactory.decodeResource(getResources(), R.drawable.earth));
 
         frameUpdater = ValueAnimator.ofInt(0);
         frameUpdater.setDuration(1000/FRAME_RATE);
@@ -87,10 +86,6 @@ public class Space extends View {
         frameUpdater.start();
 
         setBackgroundColor(Color.BLACK);
-
-        earthPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
-        earthPaint.setStyle(Paint.Style.FILL);
-        earthPaint.setColor(Color.GREEN);
 
         asteroidPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
         asteroidPaint.setStyle(Paint.Style.FILL);
@@ -188,10 +183,12 @@ public class Space extends View {
     protected void onDraw(Canvas canvas) {
         super.onDraw(canvas);
 
+        // Zoom the canvas
         canvas.save();
         canvas.scale(zoom, zoom, zoomx, zoomy);
 
-        canvas.drawCircle(centerx, centery, earthRadius, earthPaint);
+        // Draw earth
+        drawEarth(canvas);
 
         // Draw the asteroids
 
@@ -211,6 +208,13 @@ public class Space extends View {
         }
 
         canvas.restore();
+
+    }
+
+    private void drawEarth(Canvas canvas)
+    {
+        earth.draw(canvas, centerx, centery);
+        //canvas.drawCircle(centerx, centery, earthRadius, earthPaint);
 
     }
 
