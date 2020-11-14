@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.os.Build;
+import android.renderscript.Sampler;
 import android.util.AttributeSet;
 import android.util.Log;
 import android.view.GestureDetector;
@@ -12,6 +14,8 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Scroller;
+
+import androidx.annotation.RequiresApi;
 
 public class Space extends View {
 
@@ -46,6 +50,9 @@ public class Space extends View {
     private Scroller scroller;
     private ValueAnimator scrollAnimator;
 
+    private int FRAME_RATE = 60;
+    private ValueAnimator frameUpdater;
+
 
     private int earthRadius = 100;
 
@@ -60,6 +67,19 @@ public class Space extends View {
     }
 
     private void init() {
+
+        frameUpdater = ValueAnimator.ofInt(0);
+        frameUpdater.setDuration(1000/FRAME_RATE);
+
+        frameUpdater.setRepeatCount(ValueAnimator.INFINITE);
+        frameUpdater.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+            @Override
+            public void onAnimationUpdate(ValueAnimator animation) {
+                invalidate();
+            }
+        });
+
+        frameUpdater.start();
 
         setBackgroundColor(Color.BLACK);
 
@@ -177,7 +197,10 @@ public class Space extends View {
             float x = (float) (centerx + (a.getDistanceFromEarth() * Math.sin(a.getAngleFromEarth())));
             float y = (float) (centery - (a.getDistanceFromEarth() * Math.cos(a.getAngleFromEarth())));
 
-            canvas.drawCircle(x, y, a.getRadius(), asteroidPaint);
+            canvas.save();
+            canvas.rotate(a.getRotationAngleInDegrees(), x, y);
+            canvas.drawOval(x - a.getWidth()/2, y - a.getHeight()/2, x + a.getWidth()/2, y + a.getHeight()/2, asteroidPaint);
+            canvas.restore();
         }
 
         canvas.restore();

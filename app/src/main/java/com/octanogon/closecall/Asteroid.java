@@ -1,17 +1,38 @@
 package com.octanogon.closecall;
 
+import android.animation.ValueAnimator;
+import android.graphics.Canvas;
+import android.view.animation.LinearInterpolator;
+
 public class Asteroid {
     /* Represents an asteroid */
 
     private float distanceFromEarth;
     private float angleFromEarth; // As a bearing
-    private float radius;
+    private float width;
+    private float height;
 
-    public Asteroid(float dist, float angle, float rad) {
+    private float rotationAngle = 0;
+
+    private ValueAnimator rotationAnimator;
+
+    public Asteroid(float dist, float angle, float w, float h) {
 
         distanceFromEarth = dist;
         angleFromEarth = angle;
-        radius = rad;
+        width = w;
+        height = h;
+
+        rotationAnimator = ValueAnimator.ofFloat(0, (float) Math.PI * 2);
+
+        rotationAnimator.setRepeatCount(ValueAnimator.INFINITE);
+
+        long duration = (long) (1000 + (Math.random() * 8000));
+        rotationAnimator.setDuration(duration);
+        rotationAnimator.setInterpolator(new LinearInterpolator());
+
+        rotationAnimator.start();
+
 
     }
 
@@ -23,9 +44,12 @@ public class Asteroid {
         return angleFromEarth;
     }
 
-    public float getRadius() {
-        return radius;
-    }
+    public float getWidth() {return width;}
+
+    public float getHeight() {return height;}
+
+    public float getRotationAngleInDegrees() {return (float) (((float) rotationAnimator.getAnimatedValue()) / (2*Math.PI)) * 360;}
+
 
 
 }
