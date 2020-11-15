@@ -17,6 +17,7 @@ import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
+import android.widget.Button;
 import android.widget.Scroller;
 import android.widget.Toast;
 
@@ -52,6 +53,8 @@ public class Space extends View {
     private int centerx;
     private int centery;
 
+    private boolean moveMode = true;
+
     private GestureDetector gestureDetector;
     private ScaleGestureDetector scaleGestureDetector;
 
@@ -75,7 +78,14 @@ public class Space extends View {
 
     }
 
+    public void setMoveMode(boolean newMoveMode)
+    {
+        moveMode = newMoveMode;
+    }
+
     private void init() {
+
+
 
         shadowPaint = new Paint(Paint.ANTI_ALIAS_FLAG);
 
@@ -108,13 +118,17 @@ public class Space extends View {
                     @Override
                     public boolean onScale(ScaleGestureDetector detector) {
 
-                        zoom *= detector.getScaleFactor();
-                        // Don't let it get too small or large
-                        zoom = Math.max(0.1f, Math.min(zoom, 5.0f));
+                        if (moveMode) {
+                            zoom *= detector.getScaleFactor();
+                            // Don't let it get too small or large
+                            zoom = Math.max(0.1f, Math.min(zoom, 5.0f));
 
-                        zoomx = detector.getFocusX();
-                        zoomy = detector.getFocusY();
-                        invalidate();
+                            zoomx = detector.getFocusX();
+                            zoomy = detector.getFocusY();
+                            invalidate();
+
+                        }
+
                         return true;
                     }
                 });
@@ -130,9 +144,28 @@ public class Space extends View {
                     @Override
                     public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
                         Log.d("FLING", "onFling: flinged: " + velocityX + " " + velocityY);
-                        scroller.fling(0, 0, (int) (velocityX / SCALE), (int) (velocityY / SCALE), minX, maxX, minY, maxY);
-                        scrollAnimator.start();
-                        postInvalidate();
+
+                        if (moveMode) {
+                            scroller.fling(0, 0, (int) (velocityX / SCALE), (int) (velocityY / SCALE), minX, maxX, minY, maxY);
+                            scrollAnimator.start();
+                            postInvalidate();
+                        }
+
+                        else { // Create asteroids
+
+                            // These coordinates are absolute
+                            float x = e1.getX();
+                            float y = e1.getY();
+
+                            Log.d("CREATE ASTEROID RAW", "x: " + x + " y: " + y);
+                            // To get the real coordinates account for the zoom level and center position
+                            x = (x - centerx) * zoom;
+                            y = (y - centery) * zoom;
+
+                            Log.d("CREATE ASTEROID", "x: " + x + " y: " + y);
+                            asteroids.add(new Asteroid(x, y, 0, 0));
+
+                        }
 
                         return true;
                     }
@@ -140,8 +173,11 @@ public class Space extends View {
                     @Override
                     public boolean onScroll(MotionEvent e1, MotionEvent e2, float distanceX, float distanceY) {
                         Log.d("Scroll", "x: " + distanceX + " y: " + distanceY);
-                        updateCenter(-(int) (distanceX / zoom), -(int) (distanceY / zoom));
-                        postInvalidate();
+
+                        if (moveMode) {
+                            updateCenter(-(int) (distanceX / zoom), -(int) (distanceY / zoom));
+                            postInvalidate();
+                        }
                         return true;
                     }
 
@@ -210,20 +246,23 @@ public class Space extends View {
 
             // Determine the x and y coordinates of the asteroid
 
-            float x = (float) (centerx + ((a.getDistanceFromEarth() * Math.sin(a.getAngleFromEarth())) / 500));
-            float y = (float) (centery - ((a.getDistanceFromEarth() * Math.cos(a.getAngleFromEarth())) / 500));
+            float x = (float) (centerx + ((a.getDistanceFromEarth() * Math.sin(a.getAngleFromEarth())) / 1e5));
+            float y = (float) (centery - ((a.getDistanceFromEarth() * Math.cos(a.getAngleFromEarth())) / 1e5));
 
             canvas.save();
-            canvas.rotate(a.getRotationAngleInDegrees(), x, y);
-            canvas.drawOval(x - a.getWidth()/2, y - a.getHeight()/2, x + a.getWidth()/2, y + a.getHeight()/2, asteroidPaint);
+            canvas.rotate((float) a.getRotationAngleInDegrees(), x, y);
+            canvas.drawOval((float) (x - a.getWidth()/2), (float) (y - a.getHeight()/2), (float) (x + a.getWidth()/2), (float) (y + a.getHeight()/2), asteroidPaint);
             canvas.restore();
 
+            /*
             // Draw a shadow
             int[] colors = {Color.TRANSPARENT, Color.BLACK};
             float[] positions = {0f, 0.8f};
             LinearGradient shadowGrad = new LinearGradient(x, y-(a.getHeight()/4), x, y+a.getHeight(), colors, positions, Shader.TileMode.CLAMP);
             shadowPaint.setShader(shadowGrad);
             canvas.drawCircle(x,y, (float) (a.getHeight()), shadowPaint);
+            */
+            Log.i("ASTEROID DRAW", "drew at x: " + x + " y: " + y);
 
         }
 

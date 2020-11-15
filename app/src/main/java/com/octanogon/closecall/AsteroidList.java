@@ -20,9 +20,31 @@ public class AsteroidList {
         findAsteroids();
     }
 
+    public void add(Asteroid asteroid) {
+
+        Asteroid[] newList = new Asteroid[asteroids.length + 1];
+
+        for (int i = 0; i < asteroids.length; i++)
+        {
+            newList[i] = asteroids[i];
+        }
+
+        newList[asteroids.length] = asteroid;
+
+        asteroids = newList;
+
+        Log.d("ASTEROID LIST", "new length: " + asteroids.length);
+    }
+
     public int getLength()
     {
         return asteroids.length;
+    }
+
+    public void updateAll(long time) {
+        for (Asteroid a : asteroids) {
+            a.updateTimeAndDistance(time);
+        }
     }
 
     private void findAsteroids() {
@@ -61,11 +83,11 @@ public class AsteroidList {
                 float minor = asteroidJson.getAsJsonObject("estimated_diameter").getAsJsonObject("kilometers").get("estimated_diameter_min").getAsFloat() * 30;
                 float major = asteroidJson.getAsJsonObject("estimated_diameter").getAsJsonObject("kilometers").get("estimated_diameter_max").getAsFloat() * 30;
 
-                float velocity = asteroidJson.getAsJsonArray("close_approach_data").get(0).getAsJsonObject().getAsJsonObject("relative_velocity").get("kilometers_per_second").getAsFloat() * 1000;
-                float closest_distance = asteroidJson.getAsJsonArray("close_approach_data").get(0).getAsJsonObject().getAsJsonObject("miss_distance").get("kilometers").getAsFloat() / 100;
+                double velocity = asteroidJson.getAsJsonArray("close_approach_data").get(0).getAsJsonObject().getAsJsonObject("relative_velocity").get("kilometers_per_second").getAsFloat();
+                double closest_distance = asteroidJson.getAsJsonArray("close_approach_data").get(0).getAsJsonObject().getAsJsonObject("miss_distance").get("kilometers").getAsFloat();// * 1000;
 
                 float angle = (float) (Math.PI * Math.random() * 2);
-                float dist = (float) closest_distance * 5;
+                double dist = (double) closest_distance * 10;
 
                 Log.i("JSON", "dist: " + dist);
 
