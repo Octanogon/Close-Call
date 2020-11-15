@@ -78,8 +78,17 @@ public class Space extends View {
 
     }
 
+    public void addRandomAsteroid()
+    {
+        asteroids.addRandom();
+
+        CharSequence text = " Added new asteroid! There are now " + asteroids.getLength() + " NEOs!";
+        Toast.makeText(getContext(), text, Toast.LENGTH_SHORT).show();
+    }
+
     public void setMoveMode(boolean newMoveMode)
     {
+        /* Never actually called */
         moveMode = newMoveMode;
     }
 
@@ -242,7 +251,7 @@ public class Space extends View {
 
         for (Asteroid a : asteroids.getAsteroids()) {
 
-            a.updateTimeAndDistance(current_time);
+            a.updateTimeAndDistance(time_scale);
 
             // Determine the x and y coordinates of the asteroid
 
@@ -254,14 +263,14 @@ public class Space extends View {
             canvas.drawOval((float) (x - a.getWidth()/2), (float) (y - a.getHeight()/2), (float) (x + a.getWidth()/2), (float) (y + a.getHeight()/2), asteroidPaint);
             canvas.restore();
 
-            /*
+
             // Draw a shadow
             int[] colors = {Color.TRANSPARENT, Color.BLACK};
             float[] positions = {0f, 0.8f};
-            LinearGradient shadowGrad = new LinearGradient(x, y-(a.getHeight()/4), x, y+a.getHeight(), colors, positions, Shader.TileMode.CLAMP);
+            LinearGradient shadowGrad = new LinearGradient(x, (float) (y-(a.getHeight()/4)), x, (float) (y+a.getHeight()), colors, positions, Shader.TileMode.CLAMP);
             shadowPaint.setShader(shadowGrad);
             canvas.drawCircle(x,y, (float) (a.getHeight()), shadowPaint);
-            */
+
             Log.i("ASTEROID DRAW", "drew at x: " + x + " y: " + y);
 
         }

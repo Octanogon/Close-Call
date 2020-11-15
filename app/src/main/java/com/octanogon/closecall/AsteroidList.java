@@ -47,6 +47,12 @@ public class AsteroidList {
         }
     }
 
+    public void addRandom() {
+
+        double closestDist = 2e7 + 4e8 * Math.random();
+        add(new Asteroid(closestDist * 2, (float) (Math.random() * (2 * Math.PI)), 100 * Math.random() + 30, 150 * Math.random() + 40, closestDist, 1 + 10 * Math.random()));
+    }
+
     private void findAsteroids() {
 
         GetAsteroidData getData = new GetAsteroidData();
@@ -89,7 +95,7 @@ public class AsteroidList {
                 float angle = (float) (Math.PI * Math.random() * 2);
                 double dist = (double) closest_distance * 10;
 
-                Log.i("JSON", "dist: " + dist);
+                Log.i("JSON Added", "dist: " + dist + " closest: " + closest_distance + " vel: " + velocity);
 
                 Asteroid newAsteroid = new Asteroid(dist, angle, minor, major, closest_distance, velocity);
 

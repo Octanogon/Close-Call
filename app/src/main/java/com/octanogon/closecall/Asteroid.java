@@ -30,8 +30,6 @@ public class Asteroid {
 
     private boolean reversed = false;
 
-    private long previousTime = 0;
-
     private ValueAnimator rotationAnimator;
 
     public Asteroid(double x, double y, double xVelocity, double yVelocity)
@@ -117,11 +115,11 @@ public class Asteroid {
 
     }
 
-    public void updateTimeAndDistance(long time)
+    public void updateTimeAndDistance(long time_step)
     {
-        long elapsedTime = (long) ((previousTime - time))*100;
+        long elapsedTime = (long) time_step*100;
 
-        previousTime = (long) time;
+        //previousTime = (long) time;
 
         // r^2 \dot{\theta} = h
 
