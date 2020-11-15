@@ -59,11 +59,13 @@ public class MainActivity extends AppCompatActivity {
         //Intent image = new Intent(this, PopupWindow.class);
         //startActivity(image);
 
+        /*
         if (imageGetter != null)
         {
             imageGetter.cancel(true);
             Log.i("INFO", "cancelled image");
         }
+        */
 
         ImageView asteroidImageView = findViewById(R.id.collisionImage);
 

@@ -49,7 +49,7 @@ public class GetImage extends AsyncTask<GetImagePackage, Void, Drawable>{
         date = new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
 
         Drawable d = null;
-        String imageURL = APIurl + "lat=" + Latitude + "&lon=" + Longitude + "&api_key=" + APIKey;
+        String imageURL = APIurl + "lat=" + Latitude + "&lon=" + Longitude + "&dim=0.15" + "&api_key=" + APIKey;
 
 
         Log.i("INFO", "Image URL = " + imageURL);
