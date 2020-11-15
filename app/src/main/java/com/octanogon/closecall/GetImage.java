@@ -1,9 +1,11 @@
 package com.octanogon.closecall;
 
 import android.graphics.drawable.Drawable;
+import android.media.Image;
 import android.os.Bundle;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.ImageView;
 
 
 import org.json.JSONArray;
@@ -23,7 +25,7 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 
 
-public class GetImage extends AsyncTask<String, Void, Drawable>{
+public class GetImage extends AsyncTask<GetImagePackage, Void, Drawable>{
 
     private static String APIurl = "https://api.nasa.gov/planetary/earth/imagery?";
 
@@ -35,15 +37,19 @@ public class GetImage extends AsyncTask<String, Void, Drawable>{
     private String Longitude;
 
 
+    private ImageView imageViewCallback;
 
-    protected Drawable doInBackground(String... location){
-        Latitude = location[0];
-        Longitude = location[1];
+
+    protected Drawable doInBackground(GetImagePackage... imPackage){
+
+        imageViewCallback = imPackage[0].imageViewCallback;
+        Latitude = imPackage[0].latitude;
+        Longitude = imPackage[0].longitude;
         Calendar cal = Calendar.getInstance();
         date = new SimpleDateFormat("yyyy-MM-dd").format(cal.getTime());
 
         Drawable d = null;
-        String imageURL = APIurl + "lat=" + Latitude + "&lon=" + Longitude + "&date=" + date + "&api_key=" + APIKey;
+        String imageURL = APIurl + "lat=" + Latitude + "&lon=" + Longitude + "&api_key=" + APIKey;
 
 
         Log.i("INFO", "Image URL = " + imageURL);
@@ -65,6 +71,11 @@ public class GetImage extends AsyncTask<String, Void, Drawable>{
         return d;
     }
 
+    @Override
+    protected void onPostExecute(Drawable drawable) {
+        super.onPostExecute(drawable);
+        imageViewCallback.setImageDrawable(drawable);
+    }
 }
 
 

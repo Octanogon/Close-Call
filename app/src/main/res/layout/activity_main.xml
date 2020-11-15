@@ -46,4 +46,21 @@
         app:layout_constraintEnd_toEndOf="parent"
         app:srcCompat="@android:drawable/ic_menu_mylocation" />
 
+    <ImageView
+        android:id="@+id/collisionImage"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:layout_marginBottom="16dp"
+        android:adjustViewBounds="false"
+        android:background="@color/material_on_primary_disabled"
+        android:cropToPadding="false"
+        android:outlineProvider="paddedBounds"
+        android:scaleType="centerInside"
+        android:scaleX="1"
+        android:scaleY="1"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:srcCompat="@android:drawable/ic_menu_gallery" />
+
 </androidx.constraintlayout.widget.ConstraintLayout>

@@ -58,6 +58,10 @@ public class Earth {
 
     }
 
+    public int getRadius() {
+        return radius;
+    }
+
     public void draw(Canvas canvas, int x, int y)
     {
         // Draws itself onto a given canvas at the given coordinates
