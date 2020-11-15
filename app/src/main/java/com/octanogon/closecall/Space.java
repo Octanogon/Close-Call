@@ -316,6 +316,7 @@ public class Space extends View {
 
                 Log.i("Collision", "COLLIDE");
 
+                a.kill();
                 mainActivity.doCollision();
 
             }
