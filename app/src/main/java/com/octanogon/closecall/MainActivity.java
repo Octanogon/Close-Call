@@ -7,8 +7,11 @@ import android.os.Bundle;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.Toast;
 
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
+
+import java.util.concurrent.ExecutionException;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -66,13 +69,22 @@ public class MainActivity extends AppCompatActivity {
             Log.i("INFO", "cancelled image");
         }
         */
+        float lat = (float) (10 + 60 * Math.random());
+        float lon = (float) (10 + 60 * Math.random());
 
+        // Get the population
+
+        GetPopulation getPopulation = new GetPopulation();
+
+        getPopulation.execute(new GetPopulationPackage(lat + "", lon + "", getApplicationContext()));
+
+
+
+        // Get the Image
         ImageView asteroidImageView = findViewById(R.id.collisionImage);
 
         imageGetter = new GetImage();
 
-        float lat = (float) (10 + 60 * Math.random());
-        float lon = (float) (10 + 60 * Math.random());
         imageGetter.execute(new GetImagePackage(lat + "", lon + "", asteroidImageView));
     }
 }

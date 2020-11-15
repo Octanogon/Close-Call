@@ -1,7 +1,9 @@
 package com.octanogon.closecall;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.util.Log;
+import android.widget.Toast;
 
 import java.io.BufferedReader;
 
@@ -20,7 +22,7 @@ import java.text.SimpleDateFormat;
 import okhttp3.*;
 
 
-public class GetPopulation extends AsyncTask<String, Void, Integer> {
+public class GetPopulation extends AsyncTask<GetPopulationPackage, Void, Integer> {
     private static String apiKey = "030ce8e697msh1b2e53c97d53e7dp1e1198jsnb91ccf928dd6";
 
     private String latitude;
@@ -29,10 +31,16 @@ public class GetPopulation extends AsyncTask<String, Void, Integer> {
     private Integer populationInRange = 0;
     JsonParser jsonParser;
 
-    protected Integer doInBackground(String... locationAndRadius) {
+    private int results;
+
+    private Context context;
+
+    protected Integer doInBackground(GetPopulationPackage... pack) {
         // get current date
-        latitude = locationAndRadius[0];
-        longitude = locationAndRadius[1];
+        latitude = pack[0].latitude;
+        longitude = pack[0].latitude;
+
+        context = pack[0].context;
         // Approximate radius due to time constriants
         range = "8000";
 
@@ -66,6 +74,7 @@ public class GetPopulation extends AsyncTask<String, Void, Integer> {
                 }
             }
 
+            results = populationInRange;
             return populationInRange;
         }
         catch (Exception e) {
@@ -73,5 +82,13 @@ public class GetPopulation extends AsyncTask<String, Void, Integer> {
             return null;
         }
 
+    }
+
+    @Override
+    protected void onPostExecute(Integer integer) {
+        super.onPostExecute(integer);
+
+        CharSequence text = "Population affected: " + results;
+        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
     }
 }
