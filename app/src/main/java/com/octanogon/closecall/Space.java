@@ -2,6 +2,7 @@ package com.octanogon.closecall;
 
 import android.animation.ValueAnimator;
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.graphics.Canvas;
@@ -29,6 +30,8 @@ public class Space extends View {
     private Paint asteroidPaint;
 
     private Paint shadowPaint;
+
+    private MainActivity mainActivity;
 
     private int currentX = 0;
     private int currentY = 0;
@@ -257,6 +260,10 @@ public class Space extends View {
         getAsteroids();
     }
 
+    public void passMainActivity(MainActivity main) {
+        mainActivity = main;
+    }
+
     private void getAsteroids() {
         asteroids = new AsteroidList();
 
@@ -300,6 +307,19 @@ public class Space extends View {
             canvas.drawCircle(x,y, (float) (a.getHeight()), shadowPaint);
 
             Log.i("ASTEROID DRAW", "drew at x: " + x + " y: " + y);
+
+            // Check for collision
+
+            if ((Math.pow(x - centerx, 2) + Math.pow(y - centery, 2)) < Math.pow(earth.getRadius(), 2)*2) { // Earth radius is in pixels/drawing units
+
+                // We have collided
+
+                Log.i("Collision", "COLLIDE");
+
+                a.kill();
+                mainActivity.doCollision();
+
+            }
 
         }
 

@@ -172,5 +172,8 @@ public class Asteroid {
     public double getRotationAngleInDegrees() {return (double) (((float) rotationAnimator.getAnimatedValue()) / (2*Math.PI)) * 360;}
 
 
+    public void kill() {
 
+        distanceFromEarth = 1e15;
+    }
 }
