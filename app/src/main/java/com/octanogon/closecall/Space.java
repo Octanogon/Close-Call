@@ -70,10 +70,7 @@ public class Space extends View {
     public Space(Context context, AttributeSet attrs) {
         super(context, attrs);
 
-        asteroids = new AsteroidList();
-
-        CharSequence text = "Successfully found " + asteroids.getLength() + " NEOs!";
-        Toast.makeText(context, text, Toast.LENGTH_LONG).show();
+        getAsteroids();
         init();
 
     }
@@ -234,6 +231,37 @@ public class Space extends View {
         postInvalidate();
 
 
+    }
+
+    public void centerView()
+    {
+        centerx = (int) ((currentWidth / 2.0));
+        centery = (int) ((currentHeight / 2.0));
+
+        zoomx = centerx;
+        zoomy = centery;
+        postInvalidate();
+    }
+
+    public void resetView()
+    {
+        centerView();
+
+        zoom = 1;
+    }
+
+    public void reset() {
+
+        resetView();
+
+        getAsteroids();
+    }
+
+    private void getAsteroids() {
+        asteroids = new AsteroidList();
+
+        CharSequence text = "Successfully found " + asteroids.getLength() + " NEOs!";
+        Toast.makeText(getContext(), text, Toast.LENGTH_LONG).show();
     }
 
     @Override

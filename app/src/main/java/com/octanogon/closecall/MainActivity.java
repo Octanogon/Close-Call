@@ -23,5 +23,25 @@ public class MainActivity extends AppCompatActivity {
                 spaceChild.addRandomAsteroid();
             }
         });
+
+        FloatingActionButton resetButton = (FloatingActionButton) findViewById(R.id.resetButton);
+
+        resetButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Space spaceChild = (Space) findViewById(R.id.space);
+                spaceChild.reset();
+            }
+        });
+
+        FloatingActionButton centerButton = (FloatingActionButton) findViewById(R.id.centerButton);
+
+        centerButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Space spaceChild = (Space) findViewById(R.id.space);
+                spaceChild.centerView();
+            }
+        });
     }
 }
